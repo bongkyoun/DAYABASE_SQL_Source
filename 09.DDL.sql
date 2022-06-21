@@ -72,11 +72,78 @@ insert into def_board(no, title, content, write_day, read_count, is_secret, writ
 insert into def_board values(5, '오늘은 금요일', '완전 기뻐요', sysdate, 1, 'F', 'egg'); 
 commit;
 
+--column
+drop table dae_type;--삭제
 
+create table data_type(
+        no number(4,0),
+        name varchar2(20),
+        gender char(1) default 'M',
+        height number(5,2),
+        weight number(4,1)      
+);
 
+desc data_type;
+select * from data_type;
 
+insert into data_type values(1234, '김경호', 'M', 185.32, 75.3);
+insert into data_type values(1234.8989, '김경호', 'M', 185.328989778, 75.88888888);
+--소숫점 이하 자리수는 반올림 후 삽입
 
+insert into data_type values(12345, '김경수', 'M', 1854.32, 75.8);
+--[number 값이 넘치는 경우] ORA-01438: value larger than specified precision allowed for this colum
 
+insert into data_type values(3456, '김수한무거북이', 'F', 178.32, 75.8);
+--[varchar2 값이 넘치는 경우] ORA-12899: value too large for column "SCOTT"."DATA_TYPE"."NAME" (actual: 21, maximum: 20)
+
+insert into data_type values(7790, '김수한', 'Female', 178.32, 75.8);
+--[char 값이 넘치는 경우] ORA-12899: value too large for column "SCOTT"."DATA_TYPE"."GENDER" (actual: 6, maximum: 1)
+
+--date, timestamp
+
+create table date_time(
+    day1 date, 
+    dat2 timestamp(6),
+    day3 timestamp(9)
+);
+desc date_time;
+
+select  to_char(day1,'YYYY/MM/DD HH24:MI:SS'),
+        to_char(day2,'YYYY/MM/DD HH24:MI:SS.FF6'),
+        to_char(day3,'YYYY/MM/DD HH24:MI:SS.FF9')  from date_time;
+
+insert into date_time values(sysdate,systimestamp,systimestamp);
+
+insert into date_time values(to_date('1998/12/01 05:30:45','YYYY/MM/DD HH24:MI:SS'),
+                            to_timestamp('2020/05/04 03:25:45.123456','YYYY/MM/DD HH24:MI:SS.FF6'),
+                            to_timestamp('2021/01/12 00:45:12.123456789','YYYY/MM/DD HH24:MI:SS.FF9'));
+
+--서브쿼리 이용한 테이블 생성(CATS : Create table As Select)
+create table depta
+as
+select deptno, dname from dept;
+
+create table deptb
+as
+select deptno, dname, loc from dept;
+
+create table deptc(no, name)
+as
+select deptno, dname from dept;
+
+--table만 생성
+create table deptd
+as
+select * from dept where 1=2;
+
+--table만 생성
+create table empa
+as
+select * from emp where 1=2;
+
+--다른테이블로부터 데이터 입fur(ITAS : Insert Table as Select)
+insert into empa
+select * from emp;
 
 
 
